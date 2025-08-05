@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sona College SET IT Fresher Day 2025 | Code the Future</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Orbitron for futuristic titles, Fira Code for terminal text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS for advanced effects (glow, animations) -->
+    <style>
+        body {
+            background-color: #0a0a1a;
+            color: #e0e0e0;
+            font-family: 'Fira Code', monospace;
+            overflow-x: hidden;
+        }
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-firacode { font-family: 'Fira Code', monospace; }
+
+        /* Neon Glow Effect */
+        .text-glow-blue { text-shadow: 0 0 5px #0ea5e9, 0 0 10px #0ea5e9, 0 0 15px #0ea5e9; }
+        .text-glow-pink { text-shadow: 0 0 5px #ec4899, 0 0 10px #ec4899, 0 0 15px #ec4899; }
+        .button-glow { box-shadow: 0 0 5px #0ea5e9, 0 0 15px #ec4899; }
+        
+        /* Particles.js Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        /* Timeline Section Styling */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #1e293b, #0ea5e9, #ec4899, #1e293b);
+            border-radius: 2px;
+        }
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .timeline-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hacker Form Blinking Cursor */
+        .form-input-field::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Glitch Animation for Success Message */
+        .glitch {
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0a0a1a;
+            overflow: hidden;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #0ea5e9;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #ec4899;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+            animation: glitch-anim-2 2s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-skew { 0% { transform: skew(0); } 10% { transform: skew(2deg); } 80% { transform: skew(2deg); } 90% { transform: skew(0); } 100% { transform: skew(0); } }
+        @keyframes glitch-anim-1 { 0% { clip-path: polygon(0 2%, 100% 2%, 100% 33%, 0 33%); } 5% { clip-path: polygon(0 75%, 100% 75%, 100% 100%, 0 100%); } 10% { clip-path: polygon(0 42%, 100% 42%, 100% 55%, 0 55%); } 100% { clip-path: polygon(0 42%, 100% 42%, 100% 55%, 0 55%); } }
+        @keyframes glitch-anim-2 { 0% { clip-path: polygon(0 67%, 100% 67%, 100% 85%, 0 85%); } 15% { clip-path: polygon(0 15%, 100% 15%, 100% 33%, 0 33%); } 20% { clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%); } 100% { clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%); } }
+    </style>
+</head>
+<body>
+    <!-- Particle.js Container -->
+    <div id="particles-js"></div>
+    
+    <!-- React Root Container -->
+    <div id="root"></div>
+
+    <!-- CDNs for React & Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- CDN for Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- Main React Application Script -->
+    <script type="text/babel">
+
+        const { useState, useEffect, useRef } = React;
+
+        // --- Hero Section Component ---
+        const HeroSection = () => {
+            const calculateTimeLeft = () => {
+                const eventDate = new Date("2025-08-28T09:30:00+05:30"); // IST
+                const difference = +eventDate - +new Date();
+                let timeLeft = {};
+
+                if (difference > 0) {
+                    timeLeft = {
+                        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                        minutes: Math.floor((difference / 1000 / 60) % 60),
+                        seconds: Math.floor((difference / 1000) % 60),
+                    };
+                }
+                return timeLeft;
+            };
+
+            const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+            useEffect(() => {
+                const timer = setTimeout(() => {
+                    setTimeLeft(calculateTimeLeft());
+                }, 1000);
+                return () => clearTimeout(timer);
+            });
+
+            return (
+                <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center p-4 relative z-10">
+                    <h1 className="font-orbitron text-5xl md:text-7xl lg:text-8xl font-black uppercase bg-gradient-to-r from-cyan-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent text-glow-blue animate-pulse">
+                        Sona College SET IT
+                        <br />
+                        Fresher Day 2025
+                    </h1>
+                    <p className="mt-4 text-xl md:text-3xl font-semibold text-glow-pink font-orbitron">
+                        Ignite Your Code Journey!
+                    </p>
+                    <div className="mt-12 flex flex-wrap justify-center gap-4 md:gap-8 text-white font-orbitron">
+                        {Object.keys(timeLeft).length > 0 ? (
+                            Object.entries(timeLeft).map(([unit, value]) => (
+                                <div key={unit} className="flex flex-col items-center">
+                                    <span className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-cyan-300 to-pink-400 bg-clip-text text-transparent">{String(value).padStart(2, '0')}</span>
+                                    <span className="text-sm uppercase tracking-widest">{unit}</span>
+                                </div>
+                            ))
+                        ) : (
+                            <span className="text-3xl font-bold text-green-400">The Event is LIVE!</span>
+                        )}
+                    </div>
+                    <a href="#register" className="mt-16 px-8 py-3 font-bold text-lg text-white font-orbitron rounded-full bg-gradient-to-r from-cyan-500 to-pink-600 hover:scale-105 transition-transform duration-300 button-glow">
+                        Register Now &gt;
+                    </a>
+                </section>
+            );
+        };
+
+        // --- Event Highlights Section ---
+        const EventHighlights = () => {
+            const highlights = [
+                { title: 'Date & Time', content: 'Aug 28, 2025 | 9:30 AM - 4:00 PM', emoji: '🗓️' },
+                { title: 'Venue', content: 'Sona College Auditorium, Salem', emoji: '📍' },
+                { title: 'Theme', content: '"Code the Future: Unleashing IT Potential"', emoji: '🚀' },
+                { title: 'Tech Quiz', content: 'Test your geeky knowledge.', emoji: '🧠' },
+                { title: 'Coding Hackathon', content: 'Build something amazing, fast!', emoji: '💻' },
+                { title: 'AR/VR Showcase', content: 'Experience new realities.', emoji: '🕶️' },
+                { title: 'Cultural Events', content: 'Talent beyond the terminal.', emoji: '🎤' },
+                { title: 'Networking Games', content: 'Connect with peers & seniors.', emoji: '🤝' },
+            ];
+
+            return (
+                <section id="highlights" className="py-20 px-4 md:px-8">
+                    <h2 className="text-4xl md:text-5xl font-orbitron text-center font-bold mb-12 text-glow-blue">Event Highlights</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                        {highlights.map((item, index) => (
+                            <div key={index} className="group bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 p-6 rounded-lg shadow-lg hover:shadow-cyan-500/20 hover:scale-105 transition-all duration-300 cursor-pointer">
+                                <div className="relative h-32 flex flex-col justify-center items-center">
+                                    <div className="transition-opacity duration-300 group-hover:opacity-0">
+                                        <h3 className="text-2xl font-bold font-orbitron text-cyan-400">{item.title}</h3>
+                                        <p className="mt-2 text-slate-300 text-center">{item.content}</p>
+                                    </div>
+                                    <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        {item.emoji}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // --- About Section (Timeline) ---
+        const AboutSection = () => {
+            const milestones = [
+                { year: '1997', title: 'Department Established', desc: 'The journey begins! SET IT opens its doors to the first batch of aspiring tech pioneers.' },
+                { year: '2005', title: 'First Major Industry Tie-up', desc: 'Partnered with a leading MNC, bridging the gap between academia and industry.' },
+                { year: '2012', title: 'Innovation Lab Launch', desc: 'A dedicated space for students to experiment with emerging technologies like IoT and Robotics.' },
+                { year: '2018', title: 'AI & ML Specialization', desc: 'Introduced advanced courses in Artificial Intelligence and Machine Learning.' },
+                { year: '2022', title: 'Cloud Computing Center of Excellence', desc: 'Established a CoE in collaboration with AWS to foster cloud skills.' },
+                { year: '2024', title: 'Notable Alumni Milestone', desc: 'Our alumni now lead innovations at top tech companies globally.' },
+            ];
+            
+            useEffect(() => {
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                const targets = document.querySelectorAll('.timeline-item');
+                targets.forEach(target => observer.observe(target));
+
+                return () => targets.forEach(target => observer.unobserve(target));
+            }, []);
+
+            return (
+                <section id="about" className="py-20 px-4 md:px-8">
+                    <h2 className="text-4xl md:text-5xl font-orbitron text-center font-bold mb-16 text-glow-pink">Our Digital Odyssey</h2>
+                    <div className="relative max-w-4xl mx-auto timeline-container">
+                        {milestones.map((item, index) => (
+                            <div key={index} className={`timeline-item mb-12 flex justify-between items-center w-full ${index % 2 === 0 ? 'flex-row-reverse' : ''}`}>
+                                <div className="order-1 w-5/12"></div>
+                                <div className="z-20 flex items-center order-1 bg-gradient-to-br from-cyan-500 to-pink-600 shadow-xl w-12 h-12 rounded-full">
+                                    <h3 className="mx-auto font-bold text-lg text-white">{item.year}</h3>
+                                </div>
+                                <div className="order-1 bg-slate-900/50 backdrop-blur-sm border border-pink-500/20 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                                    <h4 className="font-bold text-xl text-pink-400 font-orbitron">{item.title}</h4>
+                                    <p className="mt-2 text-sm text-slate-300">{item.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // --- Registration Form Component ---
+        const RegistrationForm = () => {
+            const [name, setName] = useState('');
+            const [email, setEmail] = useState('');
+            const [phone, setPhone] = useState('');
+            const [progress, setProgress] = useState(0);
+            const [submitted, setSubmitted] = useState(false);
+
+            useEffect(() => {
+                const filledCount = [name, email, phone].filter(Boolean).length;
+                setProgress((filledCount / 3) * 100);
+            }, [name, email, phone]);
+            
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if(progress === 100) {
+                    setSubmitted(true);
+                } else {
+                    alert("Please fill all fields to proceed.");
+                }
+            };
+            
+            if (submitted) {
+                return (
+                    <div className="max-w-2xl mx-auto text-center py-20">
+                        <h3 className="relative text-3xl md:text-4xl font-bold font-firacode text-green-400 glitch" data-text="REGISTRATION_SUCCESS">
+                           REGISTRATION_SUCCESS
+                        </h3>
+                        <p className="mt-4 text-slate-300">Welcome to the future, {name}. Your access key has been dispatched to {email}.</p>
+                    </div>
+                );
+            }
+
+            return (
+                <section id="register" className="py-20 px-4">
+                    <h2 className="text-4xl md:text-5xl font-orbitron text-center font-bold mb-12 text-glow-blue">Access Mainframe</h2>
+                    <div className="max-w-2xl mx-auto bg-black/50 border-2 border-green-500/50 rounded-lg p-8 shadow-[0_0_20px_rgba(74,222,128,0.3)] font-firacode">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="text-green-400">/sys/initiate_registration.sh</p>
+                            <div className="flex space-x-2">
+                                <span className="w-3 h-3 rounded-full bg-yellow-400"></span>
+                                <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                                <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                            </div>
+                        </div>
+                        <div className="w-full h-px bg-green-500/30 mb-6"></div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-6">
+                                <label htmlFor="name" className="block text-green-400 mb-2">C:\&gt; Enter Name:</label>
+                                <input type="text" id="name" value={name} onChange={e => setName(e.target.value)} className="w-full bg-transparent border-none text-white focus:ring-0 form-input-field" required />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="email" className="block text-green-400 mb-2">C:\&gt; Enter Email:</label>
+                                <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-transparent border-none text-white focus:ring-0 form-input-field" required />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="phone" className="block text-green-400 mb-2">C:\&gt; Enter Phone:</label>
+                                <input type="tel" id="phone" value={phone} onChange={e => setPhone(e.target.value)} className="w-full bg-transparent border-none text-white focus:ring-0 form-input-field" required />
+                            </div>
+                            
+                            <div className="w-full bg-gray-700 rounded-full h-2.5 my-6">
+                                <div className="bg-green-500 h-2.5 rounded-full transition-all duration-500" style={{width: `${progress}%`}}></div>
+                            </div>
+
+                            <button type="submit" className="w-full py-3 bg-green-500/80 text-black font-bold hover:bg-green-400 transition-colors duration-300">
+                                [ Execute Registration ]
+                            </button>
+                        </form>
+                    </div>
+                </section>
+            );
+        };
+        
+        // --- Tech Trivia Section ---
+        const TechTrivia = () => {
+            const questions = [
+                { question: "What does HTML stand for?", options: ["Hyper Tool Markup Language", "Hyper Text Markup Language", "High-level Text Machine Language"], answer: 1 },
+                { question: "Which company developed the React library?", options: ["Google", "Microsoft", "Facebook (Meta)"], answer: 2 },
+                { question: "What is the output of `console.log(typeof null)` in JavaScript?", options: ["'null'", "'undefined'", "'object'"], answer: 2 },
+            ];
+
+            const [currentQ, setCurrentQ] = useState(0);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+            const [feedback, setFeedback] = useState('');
+
+            const handleAnswer = (index) => {
+                if (feedback) return; // Prevent changing answer after submission
+                setSelectedAnswer(index);
+            };
+
+            const checkAnswer = () => {
+                if(selectedAnswer === null) {
+                    setFeedback({text: 'Please select an option!', color: 'text-yellow-400'});
+                    return;
+                }
+                if (selectedAnswer === questions[currentQ].answer) {
+                    setFeedback({text: 'Correct! Access granted to next level.', color: 'text-green-400'});
+                } else {
+                    setFeedback({text: 'Incorrect! System breach detected.', color: 'text-red-500'});
+                }
+            };
+            
+            const nextQuestion = () => {
+                setFeedback('');
+                setSelectedAnswer(null);
+                setCurrentQ((prev) => (prev + 1) % questions.length);
+            }
+
+            return (
+                <section id="trivia" className="py-20 px-4 bg-slate-900/30">
+                    <h2 className="text-4xl md:text-5xl font-orbitron text-center font-bold mb-12 text-glow-pink">Code Challenge: Pre-Quiz</h2>
+                    <div className="max-w-3xl mx-auto bg-slate-900 border border-pink-500/30 p-8 rounded-lg shadow-lg shadow-pink-500/10">
+                        <p className="text-slate-400 mb-2">Question {currentQ + 1} of {questions.length}</p>
+                        <h3 className="text-2xl font-semibold mb-6 text-white">{questions[currentQ].question}</h3>
+                        <div className="space-y-4">
+                            {questions[currentQ].options.map((option, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handleAnswer(index)}
+                                    className={`w-full text-left p-4 rounded-md border-2 transition-all duration-300
+                                        ${selectedAnswer === index ? 'bg-cyan-500/30 border-cyan-400' : 'bg-slate-800 border-slate-700 hover:border-cyan-400'}
+                                        ${feedback && (index === questions[currentQ].answer) ? '!bg-green-500/30 !border-green-400' : ''}
+                                        ${feedback && selectedAnswer === index && (index !== questions[currentQ].answer) ? '!bg-red-500/30 !border-red-400' : ''}`}
+                                >
+                                    <span className="font-firacode">{'> '}{option}</span>
+                                </button>
+                            ))}
+                        </div>
+                        {feedback ? (
+                           <div className="mt-6 text-center">
+                               <p className={`text-xl font-bold ${feedback.color}`}>{feedback.text}</p>
+                               <button onClick={nextQuestion} className="mt-4 px-6 py-2 bg-pink-600 hover:bg-pink-500 rounded-md font-bold">
+                                   Next Question
+                               </button>
+                           </div>
+                        ) : (
+                           <button onClick={checkAnswer} className="mt-6 w-full py-3 bg-cyan-600 hover:bg-cyan-500 rounded-md font-bold">
+                               Submit Answer
+                           </button>
+                        )}
+                    </div>
+                </section>
+            );
+        };
+        
+        // --- Footer Component ---
+        const Footer = () => {
+            const socialLinks = {
+                twitter: "#",
+                instagram: "#",
+                linkedin: "#",
+            };
+            return (
+                <footer className="bg-black/30 text-center py-10 px-4">
+                    <div className="flex justify-center space-x-6 mb-6">
+                        <a href={socialLinks.twitter} target="_blank" className="text-slate-400 hover:text-cyan-400 transition-colors">
+                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                        </a>
+                        <a href={socialLinks.instagram} target="_blank" className="text-slate-400 hover:text-pink-500 transition-colors">
+                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.058-1.689-.072-4.948-.072zM12 6.845a5.155 5.155 0 100 10.31 5.155 5.155 0 000-10.31zm0 8.31a3.155 3.155 0 110-6.31 3.155 3.155 0 010 6.31zm6.356-8.525a1.24 1.24 0 100 2.48 1.24 1.24 0 000-2.48z" /></svg>
+                        </a>
+                        <a href={socialLinks.linkedin} target="_blank" className="text-slate-400 hover:text-blue-500 transition-colors">
+                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
+                        </a>
+                    </div>
+                    <p className="text-slate-400">Sona College of Technology, Junction Main Road, Salem, Tamil Nadu 636005</p>
+                    <p className="text-slate-400">Contact: <a href="mailto:info@sonatech.ac.in" className="text-cyan-400 hover:underline">info@sonatech.ac.in</a></p>
+                    <p className="mt-8 text-sm text-pink-500/80 font-firacode">&lt; Designed by the IT Freshers Community /&gt;</p>
+                </footer>
+            );
+        };
+
+        // --- Main App Component ---
+        const App = () => {
+            useEffect(() => {
+                particlesJS('particles-js', {
+                    "particles": {
+                        "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+                        "color": { "value": "#0ea5e9" },
+                        "shape": { "type": "circle" },
+                        "opacity": { "value": 0.5, "random": true },
+                        "size": { "value": 3, "random": true },
+                        "line_linked": { "enable": true, "distance": 150, "color": "#ec4899", "opacity": 0.2, "width": 1 },
+                        "move": { "enable": true, "speed": 1, "direction": "none", "straight": false }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": { "onhover": { "enable": true, "mode": "repulse" } },
+                        "modes": { "repulse": { "distance": 50, "duration": 0.4 } }
+                    },
+                    "retina_detect": true
+                });
+            }, []);
+
+            return (
+                <main>
+                    <HeroSection />
+                    <EventHighlights />
+                    <AboutSection />
+                    <RegistrationForm />
+                    <TechTrivia />
+                    <Footer />
+                </main>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+
+    </script>
+</body>
+</html>
